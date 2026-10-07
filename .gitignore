@@ -1,0 +1,24 @@
+# Machine-specific Claude Code settings (hardcoded paths, accumulated tool permissions)
+settings.local.json
+
+# Authentication cookies and session files
+*cookies*.json
+*.cookie
+*.session
+auth/
+cookies/
+
+# Secrets and credentials
+.env
+*.env
+*.key
+*.pem
+secrets/
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
