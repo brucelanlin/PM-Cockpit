@@ -4,6 +4,13 @@ Meaningful changes to the skill system, and why.
 
 ---
 
+## v1.0.1 — 2026-10-12
+
+### Fixed: main skill never auto-triggered
+The `pm-cockpit` description contained `": "`, which is invalid in an unquoted YAML value. Claude Code still registered the slash command but dropped the description, so the skill never triggered on its own. `claude plugin validate` doesn't catch this.
+
+---
+
 ## v1.0.0 — 2026-10-12
 
 First tagged release.

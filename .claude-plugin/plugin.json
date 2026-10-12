@@ -1,6 +1,6 @@
 {
   "name": "pm-cockpit",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Claude Code skills for product owners in Jira: one entry point for features, stories, acceptance criteria, PRD sync, sprint planning and delegated PM work.",
   "author": { "name": "brucelanlin", "url": "https://github.com/brucelanlin" },
   "homepage": "https://github.com/brucelanlin/PM-Cockpit",

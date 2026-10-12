@@ -145,7 +145,7 @@ your-workspace/
   decisions-log.md        (optional, created on first use)
 ```
 
-**The AC audit workflow** needs Claude Code's Workflow feature, which isn't available in every setup. Copy `workflows/ac-field-audit.js` to `.claude/workflows/` and run it with `{ project, acField, jiraMcp }` from `project-context.md`. Without the Workflow feature, ask pm-cockpit directly: "audit every story in NFS for AC in the description instead of the AC field".
+**The AC audit workflow** needs Claude Code's Workflow feature, which isn't available in every setup. The plugin installs it as `pm-cockpit:ac-field-audit`; with the copy install, put `workflows/ac-field-audit.js` in `.claude/workflows/`. Run it with `{ project, acField, jiraMcp }` from `project-context.md`. Without the Workflow feature, ask pm-cockpit directly: "audit every story in NFS for AC in the description instead of the AC field".
 
 ### 2. Fill in `project-context.md`
 
