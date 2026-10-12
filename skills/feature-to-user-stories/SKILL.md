@@ -1,6 +1,5 @@
 ---
 name: feature-to-user-stories
-type: component
 description: Lightweight skill for converting Jira Features, epics, PRD sections, or feature descriptions into implementation-ready user stories. Needs no configuration. When a project-context.md is set up, prefer the pm-cockpit skill — it adds the PRD check, code cross-reference, Jira field validation and post-creation audit. Use this skill for quick decomposition or when explicitly invoked.
 ---
 

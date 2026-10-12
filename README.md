@@ -27,7 +27,7 @@ Everything specific to your product and Jira setup lives in one file, `project-c
 ## What you can get done
 
 **Backlog work in Jira**
-- Create or refine a feature as a 9-section spec
+- Create or refine a feature as a structured spec (your own section template)
 - Write or refine stories with Given/When/Then acceptance criteria
 - Reflect a scope change (from a pasted email or chat) in a feature and cascade it to its stories
 - Review process flows across features for gaps and contradictions
@@ -50,11 +50,13 @@ Everything specific to your product and Jira setup lives in one file, `project-c
 
 | Path | What it is |
 |---|---|
-| `project-context.md` | **The one file you edit.** Product, personas, workflow, file paths, repos, Jira keys and field IDs, delegation context blocks. Ships with a fictional example. |
+| `project-context.md` | **The one file you edit.** Product, personas, workflow, file paths, repos, Jira keys and field IDs, Jira tool mapping, feature template, delegation context blocks. Ships with a fictional example. |
 | `skills/pm-cockpit/` | Primary skill and single entry point |
 | `skills/sprint-planning/` | Sprint and PI planning from live board state |
 | `skills/feature-to-user-stories/` | Lightweight story decomposition; needs no configuration |
 | `workflows/ac-field-audit.js` | Workflow that audits every story for AC in the right field |
+| `examples/` | Sample output for the fictional product: a [feature spec](examples/feature-spec.md), a [story](examples/story.md) and a [sprint brief](examples/sprint-brief.md) |
+| `.claude-plugin/` | Plugin and marketplace manifests, so it installs with `/plugin` |
 | `CHANGELOG.md` | Changes and the reasons behind them |
 
 ---
@@ -105,7 +107,7 @@ pm-cockpit sits one step upstream. It produces the Jira features and stories a `
 
 | | pm-cockpit | `/spec` |
 |---|---|---|
-| Output | Jira feature (9 sections) + stories with Given/When/Then AC | A spec file on a feature branch |
+| Output | Jira feature (your section template) + stories with Given/When/Then AC | A spec file on a feature branch |
 | Granularity | Feature = 1–2 sprints; one story ≈ one spec | One spec per feature branch |
 | Grounding | PRD with a freshness check, live Jira, all product repos | Codebase, earlier specs, architecture decision records |
 | Traceability | Append-only decision log; PRD reconciliation | Spec and ADR cross-links in the repo |
@@ -119,26 +121,31 @@ pm-cockpit sits one step upstream. It produces the Jira features and stories a `
 
 ### 1. Install
 
+**As a plugin (recommended).** In Claude Code:
+
 ```bash
-git clone https://github.com/brucelanlin/PM-Cockpit.git
+/plugin marketplace add brucelanlin/PM-Cockpit
+/plugin install pm-cockpit@pm-cockpit
 ```
 
-Copy `skills/`, `workflows/` and `project-context.md` into the `.claude/` folder of the directory you work from:
+The skills are then available in every project and update with `/plugin marketplace update pm-cockpit`. As a plugin, they're namespaced: `pm-cockpit:pm-cockpit`, `pm-cockpit:sprint-planning`, `pm-cockpit:feature-to-user-stories`. They still trigger on backlog language without you typing the name.
+
+Then put your configuration in the project you work from. Copy [`project-context.md`](project-context.md) to `.claude/project-context.md` there.
+
+**By copying files.** Clone the repo and copy `skills/` and `project-context.md` into the `.claude/` folder of your working directory.
+
+Either way, your workspace ends up like this. Only `project-context.md` is required; the rest is optional.
 
 ```
 your-workspace/
   .claude/
     project-context.md
-    skills/
-      pm-cockpit/SKILL.md
-      sprint-planning/SKILL.md
-      feature-to-user-stories/SKILL.md
-    workflows/
-      ac-field-audit.js
-  prd.md
-  features/
-  decisions-log.md        (created on first use)
+  prd.md                  (optional)
+  features/               (optional local registry)
+  decisions-log.md        (optional, created on first use)
 ```
+
+**The AC audit workflow** needs Claude Code's Workflow feature, which isn't available in every setup. Copy `workflows/ac-field-audit.js` to `.claude/workflows/` and run it with `{ project, acField, jiraMcp }` from `project-context.md`. Without the Workflow feature, ask pm-cockpit directly: "audit every story in NFS for AC in the description instead of the AC field".
 
 ### 2. Fill in `project-context.md`
 
@@ -146,17 +153,20 @@ Replace the fictional Northwind example with your own values:
 
 1. **Product** — name, audience, phase, principles, workflow steps and module labels, personas, deferred items, competitors, stakeholders.
 2. **Files and repos** — project root, PRD path, features folder, decision log, and the code repos to read before drafting stories (or remove that table).
-3. **Jira** — base URL, MCP server name, feature and story projects, issue type IDs, board ID, AC field and its format, how stories link to features, required fields for a feature, labels, priority mapping, description markup.
+3. **Jira** — base URL, MCP server name, feature and story projects, issue type IDs, board ID, AC field and its format, how stories link to features, required fields for a feature, labels, priority mapping, description markup, and the **tool mapping** from the skills' generic operation names to your MCP server's tools.
 4. **Context blocks A–E** — short summaries the delegated skills receive.
+5. **Feature template** — the sections every feature uses. Keep the enterprise default or replace it with your own.
+
+Without a PRD, local registry or code repos, the skills skip the steps that need them. Live Jira is the only hard requirement.
 
 To find field and issue type IDs, ask Claude to read an existing issue's full field list through your Jira MCP server, or use `GET /rest/api/2/field` and `GET /rest/api/2/issue/createmeta`.
 
-Give your PRD a status line the skill can date-check: `**Document Status:** V1.0 (Updated YYYY-MM-DD)`.
+If you use a PRD, give it a status line the skill can date-check: `**Document Status:** V1.0 (Updated YYYY-MM-DD)`.
 
 ### 3. Dependencies
 
 - [Claude Code](https://claude.ai/code)
-- A Jira MCP server exposing `search_issues`, `get_issue`, `create_issue`, `update_issue` and `get_board_issues` (or equivalents)
+- A Jira MCP server that can search by JQL, read, create and update issues, and create issue links. Board and sprint tools are used if present. Map the names in `project-context.md` §3
 - Optional, for delegated routes: the PM skills marketplace
 
 ```bash
@@ -169,7 +179,7 @@ Without it, pm-cockpit does that work itself with the same context.
 
 Just describe what you need. "Create a feature for offline job notes", "refine KEY-123", "prepare sprint planning", "how do we compare to X". pm-cockpit triggers on backlog language.
 
-Run the AC audit as a workflow with `{ project, acField, jiraMcp }` taken from `project-context.md`.
+See [`examples/`](examples/) for what the output looks like.
 
 ---
 

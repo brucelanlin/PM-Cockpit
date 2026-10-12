@@ -4,7 +4,28 @@ Meaningful changes to the skill system, and why.
 
 ---
 
-## 2026-10-07 — Generic release
+## v1.0.0 — 2026-10-12
+
+First tagged release.
+
+### Added: Plugin packaging
+`.claude-plugin/plugin.json` and `marketplace.json`, so the skills install with `/plugin marketplace add brucelanlin/PM-Cockpit`.
+
+### Added: Examples
+Sample feature spec, story and sprint brief for the fictional Northwind product in `examples/`.
+
+### Added: Jira tool mapping and feature template in `project-context.md`
+The skills name generic Jira operations; each team maps them to its MCP server's tools. The feature section template moved out of the skill into config (§5), so teams can use their own.
+
+### Changed: PRD, local registry, decision log and code repos are optional
+Skills skip the steps that need a source the config leaves out. Live Jira is the only hard requirement. Jira Cloud (Markdown/ADF, `/rest/api/3`) is the example default.
+
+### Removed
+Non-standard `type:` field from skill frontmatter.
+
+---
+
+## 2026-10-07 — Generic rewrite
 
 The skills were first written for one team's Jira setup. This release makes them reusable on any product without editing the skills.
 

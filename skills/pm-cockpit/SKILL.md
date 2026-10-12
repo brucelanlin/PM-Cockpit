@@ -1,6 +1,5 @@
 ---
 name: pm-cockpit
-type: workflow
 description: Single entry point for product backlog work in Jira. Use whenever the user wants to create, update, review, refine or split features, user stories, acceptance criteria or the PRD; reflect a scope change (including a pasted email or chat message with decisions); cascade feature changes to child stories; review process flows for consistency; or get help with discovery, research, competitive analysis, stakeholders or sprint planning. Triggers on "create a feature", "write a story", "AC for", "refine this story", "update the feature", "scope changed", "update the stories to match", "backlog", "feature spec", "PRD", "sprint planning", "PI planning", "story map", "how do we compare to", "my stakeholder wants". Use it before writing any Jira content, even if the user doesn't say "feature" or "story": if they describe a capability they want built or tracked, this skill applies.
 ---
 
@@ -11,6 +10,10 @@ You are a senior PO/PM assistant. Your job is to help the Product Owner create c
 Every run has the same goal: content that is clear to engineers, honest about scope, and ready for the team to act on without coming back with questions.
 
 **Configuration.** All product- and Jira-specific values live in `project-context.md` (normally `.claude/project-context.md`). Read it before anything else. Every `{{PLACEHOLDER}}` below refers to a value defined there. If the file or a needed value is missing, say so and ask; never guess IDs, keys or paths.
+
+**Optional sources.** The PRD, the local feature registry, the decision log and code repos are optional. If `project-context.md` leaves one out, skip every step that uses it and don't make claims that depend on it (e.g. no code claims without repos). Live Jira is always required.
+
+**Jira tools.** Calls such as `search_issues`, `get_issue`, `create_issue`, `update_issue`, `get_board_issues`, `get_board_active_sprint` and `get_board_sprints` name generic operations. Use the matching tool from the Jira tool mapping in `project-context.md` §3.
 
 ---
 
@@ -59,14 +62,14 @@ Delegated skills come from the [Product-Manager-Skills](https://github.com/deanp
 
 | Request type | Triggers | Delegates to | Notes |
 |---|---|---|---|
-| Feature creation / refinement | "create a feature", "feature spec" | Execute directly | Full 9-section spec workflow |
+| Feature creation / refinement | "create a feature", "feature spec" | Execute directly | Full spec workflow (feature template in project-context.md §5) |
 | Feature update from scope change | "update this feature", "scope changed", "reflect this decision", pasted email/chat with decisions | Execute directly | Read PRD + current feature; identify what changed; propose targeted section updates; apply on confirmation; check child stories for cascade |
 | Cascading story updates | "update the underlying stories", "sync stories to feature", "stories are out of date" | Execute directly | Fetch child stories; find drift against the updated feature; propose story-by-story changes |
 | Process flow / consistency review | "review the process flow", "check the flows", "are these aligned" | Execute directly | Read referenced features; find gaps, sequencing errors, contradictions, missing branches; propose fixes per feature |
 | Story creation | "write a story", "AC for", "create stories for" | Execute directly | `{{STORY_PROJECT}}`, board `{{BOARD_ID}}` |
 | Story refinement | "simplify this story", "refine this story", "clean up this Jira", pasted issue URL | Execute directly | See Story refinement workflow |
 | PRD refinement | "update the PRD", "PRD is out of date", "add this to the PRD" | Execute directly | See PRD refinement workflow |
-| Sprint / PI planning | "sprint planning", "sprint goal", "what's ready to plan", "PI planning", "backlog health" | `sprint-planning` | Reads live board state |
+| Sprint / PI planning | "sprint planning", "sprint goal", "what's ready to plan", "PI planning", "backlog health" | `sprint-planning` (`pm-cockpit:sprint-planning` when installed as a plugin) | Reads live board state |
 | Stakeholder request decoding | "someone asked me to", "my stakeholder wants", pasted request | `pm-essentials:incoming-request-advisor` | Block D |
 | Frame initiative as hypothesis | "frame this as a bet", "what would prove this wrong" | `pm-essentials:epic-hypothesis` | Blocks A + B |
 | Opportunity framing | "why do we need this", "reframe this request" | `pm-essentials:opportunity-solution-tree` | Block A |
@@ -95,7 +98,7 @@ Invoke the skill with the `Skill` tool and prepend the relevant context block(s)
 
 Interpret the output through the PRD before presenting it:
 - **Request decoding** → name the affected persona, whether the ask maps to an existing feature or a gap, and any PRD conflict. Offer an OST or feature spec next.
-- **Hypothesis / problem framing / OST** → map opportunities to the workflow steps and existing features. Offer a 9-section feature spec only for genuine gaps.
+- **Hypothesis / problem framing / OST** → map opportunities to the workflow steps and existing features. Offer a feature spec only for genuine gaps.
 - **Research, JTBD, VOC** → map findings to the personas and workflow steps. Surface unmet jobs as candidate features, checked against PRD scope.
 - **Competitive / positioning** → flag capability gaps worth adding to the PRD; offer to update it.
 - **Story map / splitting** → validate each story against INVEST; combine stories that fail Valuable instead of splitting further.
@@ -119,16 +122,16 @@ Run these steps in order.
 **1. Read `project-context.md` and connect to Jira**
 Confirm the `{{JIRA_MCP}}` server is connected and authenticated. Store any session cookies or tokens outside the project folder.
 
-**2. Read the PRD and classify its freshness**
-Read `{{PRD_PATH}}` before generating any feature or story content. Classify fresh / review-due / stale (see above). Apply the conditional precedence for the rest of the session.
+**2. Read the PRD and classify its freshness** (if `{{PRD_PATH}}` is set)
+Read `{{PRD_PATH}}` before generating any feature or story content. Classify fresh / review-due / stale (see above). Apply the conditional precedence for the rest of the session. Without a PRD, live Jira and the PO's decisions are the only scope authority; skip freshness and reconciliation.
 
-**3. Sync the feature registry — mandatory**
+**3. Pull the live feature set**
 ```
 search_issues(jql: "{{FEATURE_JQL}}", maxResults: 50)
 ```
-Fetch `summary` and `status` for every key and update `{{FEATURES_DIR}}/SYNC-STATUS.md` with today's date, new features and status changes. This pull is also the input to PRD reconciliation when the PRD is stale.
+Fetch `summary` and `status` for every key. If `{{FEATURES_DIR}}` is set, update `{{FEATURES_DIR}}/SYNC-STATUS.md` with today's date, new features and status changes. This pull is also the input to PRD reconciliation when the PRD is stale.
 
-**4. Read the code — mandatory for story work**
+**4. Read the code** (for story work, if repos are listed)
 For each repo in `project-context.md` §2: `git pull` local clones; read remote-only repos through your Git host's API. Then read the relevant files, not just directory listings. If a pull fails, read what's on disk and say the repo may not be at HEAD.
 
 Rules for claims about code:
@@ -221,19 +224,7 @@ Heuristics: the first instance of a repeated pattern is usually M, later ones S 
 
 ## Feature spec structure
 
-Every feature description uses these 9 sections in order. Adapt the section list once, in your team's template, then keep it fixed.
-
-| # | Section |
-|---|---|
-| 1 | Current Situation / Problem Statement / Objectives |
-| 2 | Boundaries / Assumptions / Out of Scope |
-| 3 | Personas |
-| 4 | User Stories |
-| 5 | Process Flow (may be "NA" when there is no sequential flow) |
-| 6 | Reliability, Availability & Serviceability / Consistency / Traceability & Transparency / Data Protection |
-| 7 | Business Acceptance — Definition of Done |
-| 8 | Solution Capabilities — In Scope / Out of Scope |
-| 9 | Architecture Concept / Integration Scenarios / Dependencies |
+Every feature description uses the sections in the **Feature template** in `project-context.md` §5, in that order. Don't add, skip or merge sections. If §5 is missing, ask the PO for their template before drafting.
 
 Format headings for `{{DESCRIPTION_MARKUP}}`. For Jira wiki markup: `h2.` for sections, `h3.` for sub-headings, `*bold*`, `*` bullets, `#` numbered lists, `{code}` blocks.
 
@@ -242,8 +233,8 @@ Format headings for `{{DESCRIPTION_MARKUP}}`. For Jira wiki markup: `h2.` for se
 - Problem → impact → objective must connect. If the problem doesn't explain why it matters to the personas, rewrite it.
 - Objectives are specific and measurable: "reduce time to first scheduled job" beats "improve the experience".
 - Personas: one line each, named personas only.
-- Section 4 holds 4–9 high-level "As a / I want / so that" stories. Implementation stories go in `{{STORY_PROJECT}}`.
-- Section 9 names dependent features by key ("Depends on KEY-123").
+- The user-stories section holds 4–9 high-level "As a / I want / so that" stories. Implementation stories go in `{{STORY_PROJECT}}`.
+- The dependencies section names dependent features by key ("Depends on KEY-123").
 
 ---
 
@@ -370,9 +361,9 @@ API notes:
 After creating or updating any feature or story:
 
 1. **Jira verification** — GET the issue; confirm fields, labels, components, AC and the parent link (including direction).
-2. **Registry sync** — after any feature creation or status change, re-run `{{FEATURE_JQL}}` and update `SYNC-STATUS.md`.
+2. **Registry sync** (if `{{FEATURES_DIR}}` is set) — after any feature creation or status change, re-run `{{FEATURE_JQL}}` and update `SYNC-STATUS.md`.
 3. **Board** — confirm the issue appears on board `{{BOARD_ID}}` and is linked to the right feature.
-4. **Local files** — new feature: add `<number>-<kebab-title>.md` to `{{FEATURES_DIR}}`; new story: note it in the feature file.
+4. **Local files** (if `{{FEATURES_DIR}}` is set) — new feature: add `<number>-<kebab-title>.md` to `{{FEATURES_DIR}}`; new story: note it in the feature file.
 5. **INVEST + edge-case check** on every story created or updated:
 
 | Criterion | Check | On failure |

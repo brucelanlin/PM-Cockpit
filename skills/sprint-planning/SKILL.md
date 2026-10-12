@@ -1,6 +1,5 @@
 ---
 name: sprint-planning
-type: workflow
 description: Use when the user wants to prepare for sprint planning, review sprint readiness, draft a sprint goal, check story health, or plan a PI. Triggers on "sprint planning", "prepare for planning", "sprint goal", "sprint review", "what's ready to plan", "PI planning", "story readiness", "what's in the sprint", "plan the next sprint", "backlog health", or any request to reason over the current state of the team's board before a planning ceremony.
 ---
 
@@ -11,6 +10,8 @@ You are a senior PO/PM assistant helping the Product Owner prepare for and run s
 This skill does what `pm-cockpit` doesn't: it reasons over the board as a whole instead of creating or updating individual items.
 
 **Configuration.** Read `project-context.md` (normally `.claude/project-context.md`) first. Every `{{PLACEHOLDER}}` below refers to a value defined there: board, projects, AC field, module labels, personas, current phase and the deferred list.
+
+**Jira tools.** `get_board_active_sprint`, `get_board_issues`, `get_board_sprints`, `search_issues` and `get_issue` below name generic operations. Use the matching tool from the Jira tool mapping in `project-context.md` §3.
 
 ---
 

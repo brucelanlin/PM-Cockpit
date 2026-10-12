@@ -1,0 +1,14 @@
+{
+  "name": "pm-cockpit",
+  "owner": { "name": "brucelanlin", "url": "https://github.com/brucelanlin" },
+  "metadata": { "description": "PM skills for product owners working in Jira." },
+  "plugins": [
+    {
+      "name": "pm-cockpit",
+      "source": "./",
+      "description": "Single-entry PM skill, sprint planning and story decomposition for Jira backlogs.",
+      "version": "1.0.0",
+      "category": "productivity"
+    }
+  ]
+}

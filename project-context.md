@@ -61,12 +61,14 @@ Sponsors (operations leadership), engineering lead, design lead, compliance/data
 
 ## 2. Files and repos
 
+Everything in this section is **optional**. Leave a row out (or delete the repos table) and the skills skip the steps that use it.
+
 | Key | Value |
 |---|---|
 | `PROJECT_ROOT` | `/Users/you/projects/northwind` (Windows: `C:\Users\you\projects\northwind`) |
-| `PRD_PATH` | `{{PROJECT_ROOT}}/prd.md` |
-| `FEATURES_DIR` | `{{PROJECT_ROOT}}/features/` (contains `SYNC-STATUS.md`) |
-| `DECISION_LOG` | `{{PROJECT_ROOT}}/decisions-log.md` |
+| `PRD_PATH` | `{{PROJECT_ROOT}}/prd.md` — optional; without it, live Jira and the PO's decisions are the only scope authority |
+| `FEATURES_DIR` | `{{PROJECT_ROOT}}/features/` (contains `SYNC-STATUS.md`) — optional local registry |
+| `DECISION_LOG` | `{{PROJECT_ROOT}}/decisions-log.md` — optional |
 
 The PRD should carry a status line the skills can date-check: `**Document Status:** Vx.x (Updated YYYY-MM-DD)`, plus a `## Changelog` table.
 
@@ -100,6 +102,23 @@ The skills pull these before drafting stories, so names and behaviour in stories
 | `RELATED_LINK` | `Relates` | Link type for overlapping stories |
 | `FORBIDDEN_FIELDS` | none | Fields that make create calls fail on this project, if any |
 
+### Jira tool mapping
+
+The skills name generic operations. Map each one to the tool your Jira MCP server actually exposes (run `/mcp` or ask Claude to list the server's tools). If a server has no board tools, the skills fall back to JQL (`sprint in openSprints()`, `sprint in futureSprints()`).
+
+| Operation in the skills | Your tool |
+|---|---|
+| `search_issues` (JQL search) | `search_issues` |
+| `get_issue` | `get_issue` |
+| `create_issue` | `create_issue` |
+| `update_issue` | `update_issue` |
+| `create_issue_link` | `create_issue_link` |
+| `get_board_issues` | `get_board_issues` |
+| `get_board_active_sprint` | `get_board_active_sprint` |
+| `get_board_sprints` | `get_board_sprints` |
+
+Example for Atlassian's remote MCP server on Jira Cloud: `search_issues` → `searchJiraIssuesUsingJql`, `get_issue` → `getJiraIssue`, `create_issue` → `createJiraIssue`, `update_issue` → `editJiraIssue`. Check the names against your server; they change between versions.
+
 ### Required fields when creating a Feature
 
 ```json
@@ -132,6 +151,10 @@ The skills pull these before drafting stories, so names and behaviour in stories
 ### Description markup
 
 `DESCRIPTION_MARKUP`: `wiki` (Jira Server/Data Center wiki markup) or `adf` / `markdown` (Jira Cloud, depending on your MCP server). The skills convert headings and lists to this format.
+
+Value for this project: `markdown` (Jira Cloud via an MCP server that converts Markdown to ADF).
+
+On Jira Cloud, authenticate with an API token or OAuth through the MCP server, and use `/rest/api/3` for any REST fallback.
 
 ---
 
@@ -171,3 +194,23 @@ Separate the literal ask from the job to be done, name the affected persona, and
 Product Owner of Northwind Field Service, MVP phase. Stakeholder types: operations sponsors (fund adoption), engineering lead (delivery), design lead (UX), compliance owner (data retention, audit), dispatchers and technicians (end users), platform administrators (KIV).
 Identify who can block, who can accelerate, and whose voice is missing.
 ```
+
+---
+
+## 5. Feature template
+
+The sections every feature description uses, in order. Replace this list with your team's own template; pm-cockpit won't add, skip or merge sections.
+
+The default below is an enterprise-grade template. A lighter team might keep only 1, 2, 4, 7 and 9.
+
+| # | Section | Notes |
+|---|---|---|
+| 1 | Current Situation / Problem Statement / Objectives | Problem → impact → measurable objective |
+| 2 | Boundaries / Assumptions / Out of Scope | |
+| 3 | Personas | One line each, named personas only |
+| 4 | User Stories | 4–9 high-level "As a / I want / so that" |
+| 5 | Process Flow | Numbered system flow; "NA" if there is none |
+| 6 | Reliability, Availability & Serviceability / Consistency / Traceability & Transparency / Data Protection | Sub-heading per dimension |
+| 7 | Business Acceptance — Definition of Done | Demoable checks |
+| 8 | Solution Capabilities — In Scope | |
+| 9 | Architecture Concept / Integration Scenarios / Dependencies | Name dependent features by key |
