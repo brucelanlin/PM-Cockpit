@@ -51,7 +51,7 @@ Everything specific to your product and Jira setup lives in one file, `project-c
 | Path | What it is |
 |---|---|
 | `project-context.md` | **The one file you edit.** Product, personas, workflow, file paths, repos, Jira keys and field IDs, Jira tool mapping, feature template, delegation context blocks. Ships with a fictional example. |
-| `skills/pm-cockpit/` | Primary skill and single entry point |
+| `skills/pm-cockpit/` | Primary skill and single entry point. `SKILL.md` holds the core rules; `references/` holds routing, PRD, feature, story, audit and REST detail, loaded only when needed |
 | `skills/sprint-planning/` | Sprint and PI planning from live board state |
 | `skills/feature-to-user-stories/` | Lightweight story decomposition; needs no configuration |
 | `workflows/ac-field-audit.js` | Workflow that audits every story for AC in the right field |
@@ -189,7 +189,7 @@ See [`examples/`](examples/) for what the output looks like.
 
 The single entry point. Executes feature, story, story refinement, scope-change, cascade, process-flow and PRD work directly; routes planning to `sprint-planning` and framing, research, competitive and stakeholder work to PM skills.
 
-The full routing table (27 routes) is at the top of the skill.
+The full routing table (27 routes) is in `skills/pm-cockpit/references/routing.md`.
 
 ### `sprint-planning`
 

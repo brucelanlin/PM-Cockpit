@@ -4,6 +4,13 @@ Meaningful changes to the skill system, and why.
 
 ---
 
+## v1.1.0 — 2026-10-12
+
+### Changed: `pm-cockpit` split into a lean SKILL.md plus reference files
+`SKILL.md` went from 477 to about 180 lines. It keeps what every run needs: configuration, source order, routing summary, pre-flight steps, clarification and the interview gate, duplication check, safety rules and the closing summary. Detail loads only when a request needs it, from `references/`: `routing.md`, `prd.md`, `features.md`, `stories.md`, `audit.md` and `jira-rest.md`. No rules were removed.
+
+---
+
 ## v1.0.1 — 2026-10-12
 
 ### Fixed: main skill never auto-triggered

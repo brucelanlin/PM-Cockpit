@@ -7,7 +7,7 @@
       "name": "pm-cockpit",
       "source": "./",
       "description": "Single-entry PM skill, sprint planning and story decomposition for Jira backlogs.",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "category": "productivity"
     }
   ]
