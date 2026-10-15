@@ -4,6 +4,18 @@ Meaningful changes to the skill system, and why.
 
 ---
 
+## v1.1.1 — 2026-10-15
+
+Fixes from the first real run against a live backlog.
+
+### Fixed: overlap check missed related stories
+Text search alone missed a story that described the same capability in other words. The check now also lists open child stories of every candidate parent feature (`linkedIssues()` or `parent =`, depending on how the project links stories) and scans the local registry, and the text search uses synonyms.
+
+### Added: closed-parent check
+Before proposing a parent feature, the skill checks its status. A Done or Obsolete parent is flagged instead of silently used, and open stories found under a closed parent are reported. The post-creation audit confirms the parent is still open.
+
+---
+
 ## v1.1.0 — 2026-10-12
 
 ### Changed: `pm-cockpit` split into a lean SKILL.md plus reference files

@@ -39,7 +39,7 @@ Heuristics: the first instance of a repeated pattern is usually M, later ones S 
 
 Stories go in `{{STORY_PROJECT}}` with issue type `{{STORY_ISSUE_TYPE_ID}}` and must appear on board `{{BOARD_ID}}`.
 
-**Parent link:** use the method recorded in `{{PARENT_LINK}}`. If it's an issue link rather than the `parent` field, create it after the story exists, then GET the feature and confirm the direction (the feature should show it is the parent). If it's reversed, delete and recreate it.
+**Parent link:** only link to an open feature (see "Check the parent before proposing it" in `SKILL.md`). Use the method recorded in `{{PARENT_LINK}}`. If it's an issue link rather than the `parent` field, create it after the story exists, then GET the feature and confirm the direction (the feature should show it is the parent). If it's reversed, delete and recreate it.
 
 **Default story format: short.** Only add sections that carry real information.
 

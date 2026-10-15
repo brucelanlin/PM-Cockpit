@@ -8,7 +8,7 @@ After creating or updating any feature or story:
 
 1. **Jira verification** — GET the issue; confirm fields, labels, components, AC and the parent link (including direction).
 2. **Registry sync** (if `{{FEATURES_DIR}}` is set) — after any feature creation or status change, re-run `{{FEATURE_JQL}}` and update `SYNC-STATUS.md`.
-3. **Board** — confirm the issue appears on board `{{BOARD_ID}}` and is linked to the right feature.
+3. **Board** — confirm the issue appears on board `{{BOARD_ID}}` and is linked to the right feature, and that the feature is still open.
 4. **Local files** (if `{{FEATURES_DIR}}` is set) — new feature: add `<number>-<kebab-title>.md` to `{{FEATURES_DIR}}`; new story: note it in the feature file.
 5. **INVEST + edge-case check** on every story created or updated:
 

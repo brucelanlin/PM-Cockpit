@@ -122,11 +122,17 @@ Before creating anything:
 - Read the local feature files in `{{FEATURES_DIR}}`.
 - If a similar feature exists, add stories to it. If scope overlaps, narrow rather than duplicate.
 
-**For stories, also search the story project by text.** Feature-level checks miss in-flight stories that already touch the same capability. Search with 3–5 key terms:
+**For stories, check overlap two ways.** Feature-level checks miss in-flight stories that already touch the same capability, and text search alone misses stories that describe it in other words.
+
+1. **Text search** with 3–5 key terms, including synonyms for the capability (e.g. "citation", "source", "extracted", "reference document"):
 ```
 project = {{STORY_PROJECT}} AND (text ~ "<term1>" OR text ~ "<term2>" OR text ~ "<term3>") ORDER BY updated DESC
 ```
+2. **Child stories of candidate parent features.** For each feature the story could belong to, list its open child stories using `{{PARENT_LINK}}`: `issue in linkedIssues("<FEATURE-KEY>")` when parents are issue links, or `parent = <FEATURE-KEY>` when they use the parent field. If `{{FEATURES_DIR}}` is set, also scan the feature files and `SYNC-STATUS.md` for stories already noted there.
+
 Name overlapping stories to the PO, link the new story to them with `{{RELATED_LINK}}`, and adjust scope so they don't duplicate.
+
+**Check the parent before proposing it.** Fetch the candidate parent's status. If it is Done, Obsolete or otherwise closed, don't attach a new story to it silently: tell the PO, and propose an open feature instead or ask whether the feature should be reopened. Also flag any existing open stories still sitting under a closed parent that you come across.
 
 ---
 
