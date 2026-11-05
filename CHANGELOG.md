@@ -4,6 +4,19 @@ Meaningful changes to the skill system, and why.
 
 ---
 
+## v1.2.0 — 2026-11-05
+
+### Added: story altitude rule and an Implementation-notes section
+Stories kept drifting down into implementation: table and column names, enum members, method names landing in scope and acceptance criteria. Scope and AC now stay in capability and behaviour terms. Symbols from code grounding don't get thrown away; they move to a labelled `*Implementation notes (from code grounding, for refinement)*` section at the end of the story, so refinement still has them. The post-creation audit has a new Altitude row that enforces this, and the content table reflects the escape hatch.
+
+### Added: cross-repo Sub-Task splitting guidance
+When a story spans two repos or layers, refinement can split it into one Sub-Task per repo so different owners work independently. The capability story stays the parent and carries the testable AC; each Sub-Task stays at capability-per-layer altitude and inherits the parent's sprint. Guideline, not a rule: small cross-repo stories can stay whole.
+
+### Changed: template ships as `project-context.example.md`
+The repo shipped its fictional config as `project-context.md`, the same name a user fills in. A forker who edited it in place and pushed would leak their own values. The template is now `project-context.example.md`, and `.gitignore` ignores `project-context.md`. The runtime path is unchanged: skills still read `.claude/project-context.md` in your workspace.
+
+---
+
 ## v1.1.1 — 2026-10-15
 
 Fixes from the first real run against a live backlog.

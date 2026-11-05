@@ -21,6 +21,7 @@ After creating or updating any feature or story:
 | Small | Fits in a sprint, one capability? | Split using the strategy in `references/stories.md` |
 | Testable | Every AC Given/When/Then with an observable outcome? | Rewrite failing AC |
 | Edge cases | AC covers empty/invalid input, dependency failure, permissions, limits? | Add AC, or list deliberately deferred cases under Out of Scope |
+| Altitude | Scope and AC read in capability/behaviour terms, with no schema, enum or method symbols? | Move symbols into the labelled Implementation-notes section (see `references/stories.md`) |
 
 6. **Code cross-reference** — if the code already implements part of it, comment on the issue with the starting point.
 7. **Handoff** — if the team uses spec-driven development, tell the PO the story key is ready to hand to their `/spec` session as the Jira reference.
