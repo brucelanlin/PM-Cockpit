@@ -22,6 +22,15 @@ A story that touches only one technical layer rarely delivers standalone value.
 
 **Post-split check:** does the split reveal work you can defer or cut? Good splits surface the 80/20.
 
+### Cross-repo stories: consider splitting per repo
+
+When a story clearly spans repos or layers (for example a backend service and a separate front end), consider splitting it into one Sub-Task per repo so different owners can work independently. This is a guideline decided in refinement, not a rule: a small cross-repo story can stay whole.
+
+- The capability story stays the parent; the per-repo Sub-Tasks sit under it.
+- Each Sub-Task stays at capability-per-layer altitude. Name the layer in plain terms ("the admin screen shows a status badge", "the service records last activity") and keep schema, enum and method symbols out of its scope and AC, the same as any story (symbols go in Implementation notes).
+- Testable AC stays on the parent capability story. Sub-Tasks carry behaviour in their scope bullets.
+- Create Sub-Tasks with the project's Sub-Task issue type and the parent as an object (`{"key": "KEY-123"}`), never a plain string. A Sub-Task inherits the parent's sprint.
+
 ### Sizing
 
 | Size | Points | Duration | When |
@@ -142,10 +151,20 @@ API notes:
 ### Descriptions
 
 - **Keep:** persona line, background, in scope, out of scope, size; dependencies and assumptions only when they carry information.
-- **Remove:** open questions, who triggered the story, technical decisions, implementation checklists, architect/developer notes, line numbers, file paths, function, type and state-management names.
+- **Remove from scope and AC:** open questions, who triggered the story, technical decisions, implementation checklists, architect/developer notes, line numbers, file paths, function, type and state-management names. Scope and AC stay in capability and behaviour terms: what the persona gets and how the system behaves.
+- **Keep load-bearing decisions in plain language.** A design decision the team must honour ("reuse the existing deploy path, no new pipeline") belongs in the body, worded as behaviour, not as the symbols that prove it.
 - **Plain English:** "the app restores the last saved draft" not "restoreDraft() reads from draftStore".
 - **Illustrative notes** are fine when labelled: "One approach: …", "e.g. …", "for the architect to decide".
 - **Out of Scope** is always explicit.
+
+Symbols from code grounding are useful for refinement, so don't discard them. Move them out of scope and AC into a clearly-labelled trailing section, never mixed into the behaviour:
+
+```
+*Implementation notes (from code grounding, for refinement)*
+* Candidate table/columns, enum members, service or method names the team will touch.
+```
+
+This keeps the story readable at capability altitude while the detail that speeds refinement travels with it. Check altitude on every story before writing, and again in the post-creation audit.
 
 | Content | Description | AC field |
 |---|---|---|
@@ -153,7 +172,7 @@ API notes:
 | Background, scope, dependencies | ✅ | ❌ |
 | Open design questions | ❌ (chat only) | ❌ |
 | Given/When/Then conditions | ❌ | ✅ |
-| Line numbers, symbol names | ❌ | ❌ |
+| Line numbers, symbol names | ❌ in scope/AC; ✅ in a labelled Implementation-notes section | ❌ |
 
 ### Personas
 

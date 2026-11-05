@@ -50,7 +50,7 @@ Everything specific to your product and Jira setup lives in one file, `project-c
 
 | Path | What it is |
 |---|---|
-| `project-context.md` | **The one file you edit.** Product, personas, workflow, file paths, repos, Jira keys and field IDs, Jira tool mapping, feature template, delegation context blocks. Ships with a fictional example. |
+| `project-context.example.md` | **The one file you edit.** Product, personas, workflow, file paths, repos, Jira keys and field IDs, Jira tool mapping, feature template, delegation context blocks. Ships filled in with a fictional example; copy it to `project-context.md` and replace the values. |
 | `skills/pm-cockpit/` | Primary skill and single entry point. `SKILL.md` holds the core rules; `references/` holds routing, PRD, feature, story, audit and REST detail, loaded only when needed |
 | `skills/sprint-planning/` | Sprint and PI planning from live board state |
 | `skills/feature-to-user-stories/` | Lightweight story decomposition; needs no configuration |
@@ -130,9 +130,9 @@ pm-cockpit sits one step upstream. It produces the Jira features and stories a `
 
 The skills are then available in every project and update with `/plugin marketplace update pm-cockpit`. As a plugin, they're namespaced: `pm-cockpit:pm-cockpit`, `pm-cockpit:sprint-planning`, `pm-cockpit:feature-to-user-stories`. They still trigger on backlog language without you typing the name.
 
-Then put your configuration in the project you work from. Copy [`project-context.md`](project-context.md) to `.claude/project-context.md` there.
+Then put your configuration in the project you work from. Copy [`project-context.example.md`](project-context.example.md) to `.claude/project-context.md` there and replace the fictional values.
 
-**By copying files.** Clone the repo and copy `skills/` and `project-context.md` into the `.claude/` folder of your working directory.
+**By copying files.** Clone the repo and copy `skills/` and `project-context.example.md` into the `.claude/` folder of your working directory, renaming the latter to `project-context.md`.
 
 Either way, your workspace ends up like this. Only `project-context.md` is required; the rest is optional.
 
@@ -149,7 +149,7 @@ your-workspace/
 
 ### 2. Fill in `project-context.md`
 
-Replace the fictional Northwind example with your own values:
+Copy `project-context.example.md` to `project-context.md` (in `.claude/`) and replace the fictional Northwind example with your own values:
 
 1. **Product** — name, audience, phase, principles, workflow steps and module labels, personas, deferred items, competitors, stakeholders.
 2. **Files and repos** — project root, PRD path, features folder, decision log, and the code repos to read before drafting stories (or remove that table).
@@ -217,7 +217,7 @@ Pages through every story in a project and reports which have AC in the descript
 
 ## Keeping your copy in sync
 
-Your `project-context.md` holds project-specific values, IDs and paths. If you fork this repo, keep it out of public commits (add it to `.gitignore`) or keep your filled-in copy only in your workspace's `.claude/` folder. `settings.local.json`, cookies and credentials are already ignored.
+Your `project-context.md` holds project-specific values, IDs and paths. The repo ships the template as `project-context.example.md` and gitignores `project-context.md`, so your filled-in copy stays out of commits even if you fork. Keeping it only in your workspace's `.claude/` folder works too. `settings.local.json`, cookies and credentials are already ignored.
 
 ---
 

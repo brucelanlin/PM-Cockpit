@@ -1,6 +1,10 @@
 # Machine-specific Claude Code settings (hardcoded paths, accumulated tool permissions)
 settings.local.json
 
+# Your filled-in config. The repo ships project-context.example.md; copy it to
+# project-context.md (or .claude/project-context.md) and fill it in. Never commit the real one.
+project-context.md
+
 # Authentication cookies and session files
 *cookies*.json
 *.cookie
